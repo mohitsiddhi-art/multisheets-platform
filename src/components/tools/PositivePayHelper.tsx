@@ -58,10 +58,14 @@ export function PositivePayHelper() {
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h3 className="text-xl font-bold text-slate-900">Positive Pay System Helper</h3>
       <select
-        className="mt-4 w-full rounded-lg border border-slate-200 p-3"
-        onChange={(e) => setSelectedBank(BANKS.find(b => b.name === e.target.value)!)}
+        className="mt-4 w-full rounded-lg border border-slate-200 p-3 cursor-pointer"
+        value={selectedBank.name}
+        onChange={(e) => {
+            const bank = BANKS.find(b => b.name === e.target.value);
+            if (bank) setSelectedBank(bank);
+        }}
       >
-        {BANKS.map(bank => <option key={bank.name}>{bank.name}</option>)}
+        {BANKS.map(bank => <option key={bank.name} value={bank.name}>{bank.name}</option>)}
       </select>
 
       <div className="mt-6">
@@ -69,7 +73,7 @@ export function PositivePayHelper() {
             href={selectedBank.portalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-teal-700 hover:text-teal-900 font-semibold"
+            className="flex items-center gap-2 text-teal-700 hover:text-teal-900 font-semibold underline decoration-teal-700/30 underline-offset-4"
         >
           <Link2 className="size-4" /> Visit Official Bank PPS Portal
         </a>
@@ -83,7 +87,7 @@ export function PositivePayHelper() {
             <p className="text-xs font-bold mt-1">To: {selectedBank.smsNumber}</p>
             <button
                 onClick={handleCopy}
-                className="mt-2 flex items-center gap-1 rounded bg-teal-100 px-2 py-1 text-[10px] font-bold text-teal-800 hover:bg-teal-200"
+                className="mt-3 flex items-center gap-1 rounded bg-teal-100 px-2 py-1 text-[10px] font-bold text-teal-800 hover:bg-teal-200"
             >
                 {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
                 {copied ? "Copied" : "Copy SMS Format"}
