@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Building2, Loader2, MapPin, Search, X } from "lucide-react";
+import { ArrowRight, Building2, Loader2, MapPin, Search, X, Download, Copy, Check } from "lucide-react";
 
 export interface SearchItem {
   id: string;
@@ -11,6 +11,7 @@ export interface SearchItem {
   type: "pincode" | "ifsc";
   code: string;
   url: string;
+  [key: string]: any;
 }
 
 // Replace this temporary dataset with the production directory index in Phase 2.
@@ -98,6 +99,7 @@ export function WorkingSearchBar() {
   const [results, setResults] = useState<SearchItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -168,6 +170,33 @@ export function WorkingSearchBar() {
       setIsOpen(false);
     }
   }
+
+  const exportData = () => {
+    return results.map(r => ({
+      ...r,
+    }));
+  };
+
+  const downloadCSV = () => {
+    const headers = ["Title", "Subtitle", "Type", "Code"];
+    const rows = results.map(r => [r.title, r.subtitle, r.type, r.code]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'search_results.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const copyToClipboard = () => {
+    const textContent = results.map(r => `${r.title} (${r.type}) - ${r.code}`).join('\n');
+    navigator.clipboard.writeText(textContent).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   return (
     <div ref={searchRef} className="relative mx-auto mt-10 w-full max-w-2xl">
@@ -253,6 +282,14 @@ export function WorkingSearchBar() {
                   </button>
                 );
               })}
+              <div className="p-3 bg-slate-50 flex items-center justify-end gap-2 border-t">
+                  <button onClick={downloadCSV} className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium py-1.5 px-3 rounded-lg flex items-center gap-1.5">
+                    <Download className="size-3.5"/> Download CSV
+                  </button>
+                  <button onClick={copyToClipboard} className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium py-1.5 px-3 rounded-lg flex items-center gap-1.5">
+                    {copied ? <Check className="size-3.5"/> : <Copy className="size-3.5"/>} {copied ? "Copied" : "Copy All"}
+                  </button>
+              </div>
             </div>
           ) : (
             <div className="p-6 text-center text-sm text-slate-500">
