@@ -4,6 +4,31 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/privacy',
+        destination: '/privacy-policy',
+        permanent: true,
+      },
+      {
+        source: '/terms-of-service',
+        destination: '/terms',
+        permanent: true,
+      },
+      {
+        source: '/contact-us',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/pincodes',
+        destination: '/pincode',
+        permanent: true,
+      },
+      {
+        source: '/ifscs',
+        destination: '/ifsc',
+        permanent: true,
+      },
+      {
         source: '/holidays',
         destination: '/#holidays',
         permanent: true,
