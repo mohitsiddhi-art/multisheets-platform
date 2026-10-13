@@ -15,7 +15,14 @@ export default function ContactPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    const trimmedData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      topic: formData.topic,
+      message: formData.message.trim(),
+    };
+    if (!trimmedData.name || !trimmedData.email || !trimmedData.message) return;
+    setFormData(trimmedData);
     setSubmitted(true);
   }
 
@@ -147,6 +154,7 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. Ramesh Sharma"
+                      maxLength={100}
                       className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
                     />
                   </label>
@@ -161,6 +169,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="ramesh@example.com"
+                      maxLength={255}
                       className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
                     />
                   </label>
@@ -190,6 +199,7 @@ export default function ContactPage() {
                   <textarea
                     required
                     rows={5}
+                    maxLength={2000}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Please include relevant Pincode, IFSC code, or details..."
