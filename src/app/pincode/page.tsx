@@ -119,7 +119,7 @@ export default async function PincodeDirectoryPage({
           Browse All Pincodes
         </h1>
         <p className="mt-2 text-slate-600">
-          Verified Indian postal pincodes from India Post public records.
+          Search, verify, and export all 1,55,000+ Indian postal PIN codes and delivery circles across all 36 States & Union Territories.
           <span className="block mt-1 text-sm text-slate-500">
             Select any pincode to view detailed branch and delivery information.
           </span>

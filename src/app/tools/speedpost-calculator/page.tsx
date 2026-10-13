@@ -146,6 +146,13 @@ Generated via MultiSheets.com`;
         </p>
       </div>
 
+      <div className="mx-auto mb-10 max-w-3xl rounded-2xl border border-slate-200 bg-slate-50 p-6">
+        <h3 className="text-lg font-bold text-slate-900">India Post Speed Post Tariff & Distance Estimator</h3>
+        <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+          Calculate official India Post domestic parcel shipping charges based on origin & destination pincodes, weight slabs (50g to 2kg+), and 18% GST. Instantly generate printable parcel dispatch slips with estimated delivery timelines.
+        </p>
+      </div>
+
       <div className="grid gap-8 lg:grid-cols-12">
         {/* Input Panel */}
         <div className="lg:col-span-7">

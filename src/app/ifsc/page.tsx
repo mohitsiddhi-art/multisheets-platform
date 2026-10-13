@@ -114,8 +114,7 @@ export default async function IfscDirectoryPage({
           Browse All Bank IFSC Codes
         </h1>
         <p className="mt-2 text-slate-600">
-          Verified Indian bank branch IFSC codes. Select any code to view
-          branch address, MICR, and contact details.
+          Look up 11-digit Reserve Bank of India IFSC codes, MICR, and NEFT/RTGS/IMPS clearing branch records for all scheduled public and private banks.
         </p>
       </div>
 

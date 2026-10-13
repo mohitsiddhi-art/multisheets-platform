@@ -110,6 +110,16 @@ Verified via MultiSheets.com`;
         </p>
       </div>
 
+      <div className="mb-10 rounded-2xl border border-slate-200 bg-slate-50 p-6">
+        <h3 className="text-lg font-bold text-slate-900">What is Positive Pay System (PPS) / Cheque Confirmation?</h3>
+        <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+          Positive Pay System (PPS) is RBI's security mechanism for cheques of ₹50,000 and above. Before issuing high-value cheques, the issuer confirms details (Cheque No, Date, Payee, and Amount) with their bank to prevent cheque fraud and clearing bounce.
+        </p>
+        <p className="mt-3 text-sm font-semibold text-slate-800">
+          Feature highlight: Includes automatic Amount-to-Words (Rupees in Lakhs & Crores) and instant RBI-standard WhatsApp/SMS bank confirmation draft.
+        </p>
+      </div>
+
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         {/* Left: Inputs + Preview */}
         <div className="space-y-8">
