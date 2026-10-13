@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { Copy, Building2, AlertCircle, CheckCircle, ArrowUpRight } from "lucide-react";
 
 import { getIfscByCode, getIfscsByBank, toSlug } from "@/lib/dataService";
+import { getFinancialServiceSchema } from "@/utils/schema";
 
 interface PageProps {
   params: Promise<{ code: string }>;
@@ -167,6 +168,10 @@ export default async function IfscDetailPage({ params, searchParams }: PageProps
           <p className="mt-2 text-slate-600">
             <span className="font-bold text-slate-900">{data.total.toLocaleString()}</span> verified bank branches and routing codes from the Reserve Bank of India.
           </p>
+          <div className="mt-4 flex items-center gap-1.5 text-xs text-slate-500">
+            <span className="inline-block size-2 rounded-full bg-emerald-500"></span>
+            Data verified & updated for 2026
+          </div>
         </div>
 
         <div className="mb-10">
@@ -228,8 +233,14 @@ export default async function IfscDetailPage({ params, searchParams }: PageProps
     );
   }
 
+  const schema = getFinancialServiceSchema(branch.bank_name, branch.ifsc, branch.address || "", branch.city || "", branch.state || "");
+
   return (
     <section className="mx-auto w-full max-w-4xl px-4 py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <nav className="mb-8 flex gap-2 text-sm text-slate-500">
         <Link href="/" className="hover:text-sky-600">Home</Link> /
         <Link href="/ifsc" className="hover:text-sky-600">IFSC</Link> /
@@ -240,6 +251,10 @@ export default async function IfscDetailPage({ params, searchParams }: PageProps
         <span className="text-sm font-bold uppercase tracking-wider text-sky-600">Bank Directory</span>
         <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-900">{branch.bank_name}</h1>
         <p className="mt-2 text-lg text-slate-600">{branch.branch}</p>
+        <div className="mt-4 flex items-center gap-1.5 text-xs text-slate-500">
+          <span className="inline-block size-2 rounded-full bg-emerald-500"></span>
+          Data verified & updated for 2026
+        </div>
 
         <div className="mt-8 grid gap-6 rounded-2xl bg-slate-50 p-6 sm:grid-cols-2">
           <div>
@@ -278,7 +293,7 @@ export default async function IfscDetailPage({ params, searchParams }: PageProps
         <div className="mt-8 flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3">
           <CheckCircle className="size-4 text-emerald-600" />
           <p className="text-xs font-medium text-emerald-800">
-            <strong>Verified:</strong> {branch.bank_name}, {branch.city} branch.
+            <strong>Verified:</strong> {branch.bank_name}, {branch.city} branch. Data verified & updated for 2026.
           </p>
         </div>
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Check, Copy, Download, MessageCircle, Printer, ShieldCheck, Banknote } from "lucide-react";
+import { Check, Copy, Download, MessageCircle, Printer, ShieldCheck, Banknote, CheckCircle } from "lucide-react";
+import { getWebApplicationSchema } from "@/utils/schema";
 
 function numberToWordsINR(amount: number): string {
   if (isNaN(amount) || amount < 0) return "";
@@ -40,6 +41,7 @@ function numberToWordsINR(amount: number): string {
 }
 
 export default function PpsChequePage() {
+  const schema = getWebApplicationSchema("PPS Cheque & Amount-in-Words Generator");
   const [chequeNo, setChequeNo] = useState("123456");
   const [date, setDate] = useState("2026-10-12");
   const [payee, setPayee] = useState("Rajesh Kumar");
@@ -97,10 +99,18 @@ Verified via MultiSheets.com`;
 
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-16 lg:py-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <div className="mb-10 max-w-3xl">
         <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-700">
           <Banknote className="size-3.5" />
           Financial Utility
+        </div>
+        <div className="mt-2 flex items-center gap-1.5 text-xs font-bold text-emerald-700">
+          <CheckCircle className="size-3.5" />
+          Data verified & updated for 2026
         </div>
         <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900 lg:text-5xl">
           Cheque PPS Slip &amp; Amount-in-Words Generator

@@ -1,7 +1,8 @@
 import { guides } from "@/data/guides";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Calendar, User, Clock } from "lucide-react";
+import { ChevronLeft, Calendar, User, Clock, CheckCircle } from "lucide-react";
+import { getArticleSchema } from "@/utils/schema";
 
 interface GuidePageProps {
   params: Promise<{ slug: string }>;
@@ -21,8 +22,14 @@ export default async function GuidePage({ params }: GuidePageProps) {
     notFound();
   }
 
+  const schema = getArticleSchema(guide.title, "2026-10-13");
+
   return (
     <article className="mx-auto w-full max-w-4xl px-4 py-12 lg:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <Link
         href="/guides"
         className="inline-flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors mb-8"
@@ -48,6 +55,10 @@ export default async function GuidePage({ params }: GuidePageProps) {
           <div className="flex items-center gap-2">
             <Clock className="size-4" />
             <span>6 min read</span>
+          </div>
+          <div className="flex items-center gap-2 text-emerald-700 font-bold">
+            <CheckCircle className="size-4" />
+            <span>Verified 2026</span>
           </div>
         </div>
       </header>

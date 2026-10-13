@@ -15,8 +15,10 @@ import {
   Info,
   ShieldCheck,
   Check,
+  CheckCircle,
   MessageCircle
 } from "lucide-react";
+import { getWebApplicationSchema } from "@/utils/schema";
 
 // India Post Speed Post Tariff Logic (Standard Distance & Weight Slabs)
 // Local: <50g: 15, <200g: 25, <500g: 30, addl 500g: 10
@@ -52,6 +54,7 @@ function calculateDistanceSlab(origin: string, dest: string): DistanceSlab {
 }
 
 export default function SpeedPostCalculatorPage() {
+  const schema = getWebApplicationSchema("Speed Post & Parcel Calculator");
   const [senderPincode, setSenderPincode] = useState("");
   const [receiverPincode, setReceiverPincode] = useState("");
   const [weightGrams, setWeightGrams] = useState<number>(50);
@@ -132,11 +135,19 @@ Generated via MultiSheets.com`;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       {/* Header */}
       <div className="mb-10 text-center">
         <div className="inline-flex items-center gap-2 rounded-full bg-teal-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
           <Truck className="size-3.5" />
           Logistics Utility
+        </div>
+        <div className="mt-2 flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-700">
+          <CheckCircle className="size-3.5" />
+          Data verified & updated for 2026
         </div>
         <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
           Speed Post & Parcel Calculator

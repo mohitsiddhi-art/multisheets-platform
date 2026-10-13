@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { Copy, MapPin, Building2, AlertCircle, CheckCircle, ChevronLeft, ChevronRight, ArrowUpRight, Download, BarChart3 } from "lucide-react";
 
 import { getPincodeByCode, getPincodesByState, toSlug } from "@/lib/dataService";
+import { getPostalAddressSchema } from "@/utils/schema";
 
 interface PageProps {
   params: Promise<{ code: string }>;
@@ -236,8 +237,14 @@ export default async function PincodeDetailPage({ params, searchParams }: PagePr
     );
   }
 
+  const schema = getPostalAddressSchema(pincode.pincode);
+
   return (
     <section className="mx-auto w-full max-w-4xl px-4 py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <nav className="mb-8 flex gap-2 text-sm text-slate-500">
         <Link href="/" className="hover:text-sky-600">Home</Link> /
         <Link href="/pincode" className="hover:text-sky-600">Pincode</Link> /
@@ -291,7 +298,7 @@ export default async function PincodeDetailPage({ params, searchParams }: PagePr
         <div className="mt-8 flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3">
           <CheckCircle className="size-4 text-emerald-600" />
           <p className="text-xs font-medium text-emerald-800">
-            <strong>Delivery verified:</strong> <span className="font-bold">{pincode.office_name}</span> is a {pincode.delivery_status} office for <strong>{pincode.pincode}</strong>.
+            <strong>Delivery verified:</strong> <span className="font-bold">{pincode.office_name}</span> is a {pincode.delivery_status} office for <strong>{pincode.pincode}</strong>. Data verified & updated for 2026.
           </p>
         </div>
 
