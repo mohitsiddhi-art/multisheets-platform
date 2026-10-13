@@ -1,6 +1,6 @@
-import { getAllIfsc } from "@/lib/dataService";
+import { getAllIfsc, getTopBanks } from "@/lib/dataService";
 import Link from "next/link";
-import { Building2, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Building2, ArrowUpRight, ChevronLeft, ChevronRight, Landmark } from "lucide-react";
 
 const PER_PAGE = 20;
 
@@ -102,7 +102,10 @@ export default async function IfscDirectoryPage({
 }) {
   const { page: pageParam } = await params;
   const page = Math.max(1, parseInt(pageParam || "1", 10));
-  const branches = await getAllIfsc(page, PER_PAGE);
+  const [branches, banks] = await Promise.all([
+    getAllIfsc(page, PER_PAGE),
+    getTopBanks(12),
+  ]);
 
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -114,6 +117,25 @@ export default async function IfscDirectoryPage({
           Verified Indian bank branch IFSC codes. Select any code to view
           branch address, MICR, and contact details.
         </p>
+      </div>
+
+      {/* Browse by Major Bank */}
+      <div className="mb-10">
+        <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-600">
+          <Landmark className="size-4 text-sky-600" /> Browse by Major Bank
+        </h2>
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {banks.map((b) => (
+            <Link
+              key={b.slug}
+              href={`/ifsc/${b.slug}`}
+              className="group rounded-xl border border-slate-200 bg-white p-3 text-center transition hover:border-sky-300 hover:shadow-md"
+            >
+              <p className="text-sm font-bold text-slate-900 group-hover:text-sky-700">{b.bank}</p>
+              <p className="mt-0.5 text-xs text-slate-500">{b.count.toLocaleString()} branches</p>
+            </Link>
+          ))}
+        </div>
       </div>
 
       {branches.length === 0 ? (
