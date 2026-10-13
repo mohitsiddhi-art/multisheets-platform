@@ -36,7 +36,7 @@ function IfscCard({ branch }: { branch: IfscWithUrl }) {
           <p className="text-sm text-slate-500">
             {branch.branch
               ? `${branch.branch}, ${branch.city}, ${branch.state}`
-              : [branch.city, branch.state].filter(Boolean).join(", " || "")}
+              : [branch.city, branch.state].filter(Boolean).join(", ")}
           </p>
         </div>
       </div>

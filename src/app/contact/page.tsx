@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, MapPin, Send, CheckCircle2, ShieldCheck, HelpCircle } from "lucide-react";
+import { Mail, Send, CheckCircle2, ShieldCheck, HelpCircle } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -44,14 +44,14 @@ export default function ContactPage() {
               Direct all official inquiries to our central desk.
             </p>
 
-            <div className="mt-6 space-y-6">
+            <div className="mt-6">
               <div className="flex items-start gap-4">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
                   <Mail className="size-5" />
                 </span>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                    Official Support Email
+                    Official Support Desk
                   </p>
                   <a
                     href="mailto:support@multisheets.com"
@@ -59,25 +59,8 @@ export default function ContactPage() {
                   >
                     support@multisheets.com
                   </a>
-                  <p className="mt-0.5 text-xs text-slate-400">
-                    Response time: 24–48 business hours
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
-                  <MapPin className="size-5" />
-                </span>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                    Operating Hub
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-slate-800">
-                    Bada Bazar, Kolkata
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    West Bengal — 700007, India
+                  <p className="mt-1 text-xs text-slate-500">
+                    Email: support@multisheets.com | Response within 24–48 hours
                   </p>
                 </div>
               </div>

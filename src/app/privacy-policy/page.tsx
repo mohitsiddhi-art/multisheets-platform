@@ -128,7 +128,7 @@ export default function PrivacyPolicyPage() {
                 </a>
               </p>
               <p className="mt-1 text-slate-600">
-                Operating Location: Bada Bazar, Kolkata, West Bengal — 700007, India
+                Email: support@multisheets.com | Response within 24–48 hours
               </p>
             </div>
           </div>

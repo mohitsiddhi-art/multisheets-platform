@@ -7,6 +7,7 @@ import { Logo } from "./Logo";
 const navigation = [
   { href: "/pincode", label: "Pincode Directory" },
   { href: "/ifsc", label: "IFSC Directory" },
+  { href: "/downloads", label: "Downloads" },
 ];
 
 export function Header() {
@@ -17,7 +18,7 @@ export function Header() {
       <div className="mx-auto flex h-18 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Logo />
 
-        <nav aria-label="Primary navigation" className="hidden items-center gap-8 md:flex">
+        <nav aria-label="Primary navigation" className="hidden items-center gap-6 md:flex">
           {navigation.map((item) => (
             <Link
               key={item.href}
@@ -28,7 +29,7 @@ export function Header() {
             </Link>
           ))}
           <Link
-            href="#directories"
+            href="/#directories"
             className="rounded-lg bg-[#1E293B] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
           >
             Explore Directories
@@ -64,7 +65,7 @@ export function Header() {
               </Link>
             ))}
             <Link
-              href="#directories"
+              href="/#directories"
               className="mt-2 rounded-lg bg-[#1E293B] px-3 py-3 text-center text-sm font-semibold text-white"
               onClick={() => setIsMenuOpen(false)}
             >
