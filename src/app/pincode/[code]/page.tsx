@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
-import { Copy, MapPin, Building2, AlertCircle, CheckCircle, ChevronLeft, ChevronRight, ArrowUpRight, Download, BarChart3 } from "lucide-react";
+import { Copy, MapPin, Building2, AlertCircle, CheckCircle, ChevronLeft, ChevronRight, ArrowUpRight, Download, BarChart3, Truck, ArrowRight } from "lucide-react";
 
 import { getPincodeByCode, getPincodesByState, toSlug } from "@/lib/dataService";
 import { getPostalAddressSchema } from "@/utils/schema";
@@ -269,8 +269,8 @@ export default async function PincodeDetailPage({ params, searchParams }: PagePr
             <p className="mt-1.5 text-lg font-bold text-slate-900">{pincode.office_type || "—"}</p>
           </div>
           <div className="rounded-2xl bg-slate-50 p-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Circle</span>
-            <p className="mt-1.5 text-sm font-bold text-slate-900">{pincode.circle}</p>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">State</span>
+            <p className="mt-1.5 text-sm font-bold text-slate-900">{pincode.state}</p>
           </div>
         </div>
 
@@ -283,15 +283,67 @@ export default async function PincodeDetailPage({ params, searchParams }: PagePr
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">District</span>
             <p className="mt-1 text-sm font-bold text-slate-900">{pincode.district}</p>
           </div>
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">State</span>
-            <p className="mt-1 text-sm font-bold text-slate-900">{pincode.state}</p>
+        </div>
+
+        {/* Postal Logistics & Dispatch SLA Matrix Card */}
+        <div className="mt-8 rounded-2xl border border-teal-100 bg-teal-50/50 p-6 sm:p-8">
+          <div className="flex items-center gap-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-teal-600 text-white">
+              <Truck className="size-5" />
+            </span>
+            <div>
+              <h3 className="text-lg font-bold text-slate-900">Postal Logistics &amp; Dispatch SLA Matrix</h3>
+              <p className="text-xs text-slate-600">Operational delivery profile and estimated Speed Post transmission timelines based on India Post historical norms.</p>
+            </div>
           </div>
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Region / Division</span>
-            <p className="mt-1 text-sm font-bold text-slate-900">
-              {pincode.region} / {pincode.division}
-            </p>
+
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            <div>
+              <h4 className="text-sm font-bold text-slate-800">Operational Delivery Profile</h4>
+              <div className="mt-3 grid gap-3.5">
+                <div className="flex items-center justify-between rounded-xl bg-white border border-teal-100 p-3.5">
+                  <span className="text-xs font-semibold text-slate-600">Circle / Region / Division</span>
+                  <span className="font-mono text-[0.7rem] font-medium text-slate-900 px-2 py-0.5 rounded bg-slate-100 border border-slate-200">
+                    {pincode.circle} / {pincode.region} / {pincode.division}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between rounded-xl bg-white border border-teal-100 p-3.5">
+                  <span className="text-xs font-semibold text-slate-600">Delivery Status</span>
+                  {pincode.delivery_status === 'Delivery' ? (
+                     <span className="rounded-full bg-emerald-50 px-3 py-1 text-[0.625rem] font-extrabold uppercase tracking-wide text-emerald-700">Delivery Office</span>
+                  ) : (
+                    <span className="rounded-full bg-amber-50 px-3 py-1 text-[0.625rem] font-extrabold uppercase tracking-wide text-amber-700">Non-Delivery Transit Office</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold text-slate-800">Estimated Speed Post Transit Timeline</h4>
+              <div className="mt-3 grid gap-3">
+                 <div className="flex items-center justify-between rounded-xl border border-teal-100 bg-white p-3.5 shadow-sm">
+                   <span className="text-xs font-bold text-teal-900/90">Local / Intra-District</span>
+                   <span className="font-bold text-slate-900 px-3 py-1 rounded bg-slate-100 text-xs">1 - 2 Business Days</span>
+                 </div>
+                 <div className="flex items-center justify-between rounded-xl border border-teal-100 bg-white p-3.5 shadow-sm">
+                   <span className="text-xs font-bold text-teal-900/90">Metro-to-Metro Transit</span>
+                   <span className="font-bold text-slate-900 px-3 py-1 rounded bg-slate-100 text-xs">2 - 3 Business Days</span>
+                 </div>
+                 <div className="flex items-center justify-between rounded-xl border border-teal-100 bg-white p-3.5 shadow-sm">
+                   <span className="text-xs font-bold text-teal-900/90">Rest of India / Rural</span>
+                   <span className="font-bold text-slate-900 px-3 py-1 rounded bg-slate-100 text-xs">4 - 6 Business Days</span>
+                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <Link
+              href="/tools/speedpost-calculator"
+              className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-2.5 text-xs font-black text-white shadow-md transition hover:bg-teal-700"
+            >
+              Calculate Speed Post Tariff for {pincode.pincode} <ArrowRight className="size-3.5" />
+            </Link>
           </div>
         </div>
 
