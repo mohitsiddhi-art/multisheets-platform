@@ -7,6 +7,7 @@ import { Logo } from "./Logo";
 const navigation = [
   { href: "/pincode", label: "Pincode Directory" },
   { href: "/ifsc", label: "IFSC Directory" },
+  { href: "/bank-holidays", label: "Bank Holidays" },
   { href: "/guides", label: "Guides" },
   { href: "/tools/speedpost-calculator", label: "Courier Calculator" },
   { href: "/downloads", label: "Downloads" },

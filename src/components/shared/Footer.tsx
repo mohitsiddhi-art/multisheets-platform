@@ -4,6 +4,7 @@ import { Logo } from "./Logo";
 const categories = [
   { title: "Pincode", href: "/pincode", description: "Search verified Indian pincodes" },
   { title: "IFSC", href: "/ifsc", description: "Verified Bank IFSC branch directory" },
+  { title: "Bank Holidays", href: "/bank-holidays", description: "2026 Bank holiday calendar" },
   { title: "Guides", href: "/guides", description: "Operational banking & postal guides" },
 ];
 
