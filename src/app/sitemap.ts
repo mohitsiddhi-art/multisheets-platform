@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/pincode`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.9 },
     { url: `${baseUrl}/ifsc`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.9 },
     { url: `${baseUrl}/guides`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.85 },
+    { url: `${baseUrl}/guides/rbi-cheque-return-reason-codes-guide`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.85 },
     { url: `${baseUrl}/downloads`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.85 },
     { url: `${baseUrl}/tools/pps-cheque`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.8 },
     { url: `${baseUrl}/tools/speedpost-calculator`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.8 },
