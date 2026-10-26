@@ -23,6 +23,7 @@ export function QuickSearchModal({ isOpen, onClose }: QuickSearchModalProps) {
     { title: "Bank IFSC Codes Directory", href: "/ifsc", type: "Directory", icon: Building2, description: "Search verified RBI bank routing codes" },
     { title: "Indian Postal Pincodes Directory", href: "/pincode", type: "Directory", icon: MapPin, description: "Search India Post branch and pincode locations" },
     { title: "Bank Holiday Calendar 2026", href: "/bank-holidays", type: "Feature", icon: Calendar, description: "Comprehensive nationwide bank holidays list" },
+    { title: "Pincode Distance & SLA Calculator", href: "/tools/pincode-distance", type: "Tool", icon: MapPin, description: "Calculate delivery SLA and distance tiers between pincodes" },
     ...guides.map(g => ({
       title: g.title,
       href: `/guides/${g.slug}`,
