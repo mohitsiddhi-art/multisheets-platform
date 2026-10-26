@@ -1,6 +1,7 @@
 import { getAllIfsc, getTopBanks } from "@/lib/dataService";
 import Link from "next/link";
 import { Building2, ArrowUpRight, ChevronLeft, ChevronRight, Landmark } from "lucide-react";
+import { INDIA_STATES_DIRECTORY } from "@/data/india-states-directory";
 
 const PER_PAGE = 20;
 
@@ -95,17 +96,14 @@ function Pagination({
   );
 }
 
-export default async function IfscDirectoryPage({
-  params,
-}: {
-  params: Promise<{ page?: string }>;
-}) {
-  const { page: pageParam } = await params;
-  const page = Math.max(1, parseInt(pageParam || "1", 10));
-  const [branches, banks] = await Promise.all([
-    getAllIfsc(page, PER_PAGE),
-    getTopBanks(12),
-  ]);
+interface PageProps {
+  searchParams?: Promise<{ page?: string }>;
+}
+
+export default async function IfscDirectoryPage({ searchParams }: PageProps) {
+  const sp = (await searchParams) ?? {};
+  const page = Math.max(1, parseInt(sp.page || "1", 10));
+  const branches = await getAllIfsc(page, PER_PAGE);
 
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -118,20 +116,20 @@ export default async function IfscDirectoryPage({
         </p>
       </div>
 
-      {/* Browse by Major Bank */}
+      {/* Browse Bank Branches by State Grid */}
       <div className="mb-10">
         <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-600">
-          <Landmark className="size-4 text-sky-600" /> Browse by Major Bank
+          <Landmark className="size-4 text-sky-600" /> Browse Bank Branches by State
         </h2>
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {banks.map((b) => (
+          {INDIA_STATES_DIRECTORY.map((s) => (
             <Link
-              key={b.slug}
-              href={`/ifsc/${b.slug}`}
+              key={s.slug}
+              href={`/ifsc/state/${s.slug}`}
               className="group rounded-xl border border-slate-200 bg-white p-3 text-center transition hover:border-sky-300 hover:shadow-md"
             >
-              <p className="text-sm font-bold text-slate-900 group-hover:text-sky-700">{b.bank}</p>
-              <p className="mt-0.5 text-xs text-slate-500">{b.count.toLocaleString()} branches</p>
+              <p className="text-sm font-bold text-slate-900 group-hover:text-sky-700">{s.stateName}</p>
+              <p className="mt-0.5 text-xs text-slate-500">{s.postalCircle}</p>
             </Link>
           ))}
         </div>

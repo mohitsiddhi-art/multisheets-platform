@@ -1,6 +1,7 @@
-import { getAllPincodes, getAllStates } from "@/lib/dataService";
+import { getAllPincodes } from "@/lib/dataService";
 import Link from "next/link";
 import { MapPin, ArrowUpRight, ChevronLeft, ChevronRight, Globe } from "lucide-react";
+import { INDIA_STATES_DIRECTORY } from "@/data/india-states-directory";
 
 const PER_PAGE = 20;
 
@@ -100,17 +101,14 @@ function Pagination({
   );
 }
 
-export default async function PincodeDirectoryPage({
-  params,
-}: {
-  params: Promise<{ page?: string }>;
-}) {
-  const { page: pageParam } = await params;
-  const page = Math.max(1, parseInt(pageParam || "1", 10));
-  const [pincodes, states] = await Promise.all([
-    getAllPincodes(page, PER_PAGE),
-    getAllStates(),
-  ]);
+interface PageProps {
+  searchParams?: Promise<{ page?: string }>;
+}
+
+export default async function PincodeDirectoryPage({ searchParams }: PageProps) {
+  const sp = (await searchParams) ?? {};
+  const page = Math.max(1, parseInt(sp.page || "1", 10));
+  const pincodes = await getAllPincodes(page, PER_PAGE);
 
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -126,20 +124,20 @@ export default async function PincodeDirectoryPage({
         </p>
       </div>
 
-      {/* Browse by State Grid */}
+      {/* Browse by State / Union Territory Grid */}
       <div className="mb-10">
         <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-600">
-          <Globe className="size-4 text-teal-600" /> Browse by State
+          <Globe className="size-4 text-teal-600" /> Browse Pincodes by State / Union Territory
         </h2>
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
-          {states.map((s) => (
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {INDIA_STATES_DIRECTORY.map((s) => (
             <Link
               key={s.slug}
-              href={`/pincode/${s.slug}`}
+              href={`/pincode/state/${s.slug}`}
               className="group rounded-xl border border-slate-200 bg-white p-3 text-center transition hover:border-teal-300 hover:shadow-md"
             >
-              <p className="text-sm font-bold text-slate-900 group-hover:text-teal-700">{s.state}</p>
-              <p className="mt-0.5 text-xs text-slate-500">{s.count.toLocaleString()} pincodes</p>
+              <p className="text-sm font-bold text-slate-900 group-hover:text-teal-700">{s.stateName}</p>
+              <p className="mt-0.5 text-xs text-slate-500">{s.postalCircle}</p>
             </Link>
           ))}
         </div>
