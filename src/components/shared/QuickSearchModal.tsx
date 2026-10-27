@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Calculator, Building2, MapPin, Calendar, FileText, ArrowRight, X } from "lucide-react";
+import { Search, Calculator, Building2, MapPin, Calendar, FileText, ArrowRight, X, Clock } from "lucide-react";
 import { guides } from "@/data/guides";
+import { getRecentSearches, RecentItem } from "@/utils/recentSearchesCache";
 
 interface QuickSearchModalProps {
   isOpen: boolean;
@@ -13,11 +14,24 @@ interface QuickSearchModalProps {
 export function QuickSearchModal({ isOpen, onClose }: QuickSearchModalProps) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [recentIfsc, setRecentIfsc] = useState<RecentItem[]>([]);
+  const [recentPincode, setRecentPincode] = useState<RecentItem[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+      setQuery("");
+      setSelectedIndex(0);
+      setRecentIfsc(getRecentSearches("ifsc", 3));
+      setRecentPincode(getRecentSearches("pincode", 3));
+    }
+  }, [isOpen]);
+
   // Define searchable items
   const items = [
+    { title: "GST Rate & HSN/SAC Code Finder", href: "/tools/gst-hsn-finder", type: "Tool", icon: Calculator, description: "Instant HSN and SAC code lookup with verified GST rates" },
     { title: "PPS Cheque Converter & Validator", href: "/tools/pps-cheque", type: "Tool", icon: Calculator, description: "Generate RBI-standard Positive Pay System slips" },
     { title: "Speed Post Tariff & SLA Calculator", href: "/tools/speedpost-calculator", type: "Tool", icon: Calculator, description: "Calculate weight-based postage and delivery SLAs" },
     { title: "Bank IFSC Codes Directory", href: "/ifsc", type: "Directory", icon: Building2, description: "Search verified RBI bank routing codes" },
@@ -37,14 +51,6 @@ export function QuickSearchModal({ isOpen, onClose }: QuickSearchModalProps) {
     item.title.toLowerCase().includes(query.toLowerCase()) ||
     item.description.toLowerCase().includes(query.toLowerCase())
   );
-
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-      setQuery("");
-      setSelectedIndex(0);
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     setSelectedIndex(0);
@@ -100,6 +106,42 @@ export function QuickSearchModal({ isOpen, onClose }: QuickSearchModalProps) {
         </div>
 
         <div className="max-h-96 overflow-y-auto p-2">
+          {query.trim() === '' && (recentIfsc.length > 0 || recentPincode.length > 0) && (
+            <div className="mb-3 px-3 pt-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+                <Clock className="size-3.5" /> Recently Viewed Lookups
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {recentIfsc.map(item => (
+                  <button
+                    key={`rec-ifsc-${item.id}`}
+                    onClick={() => {
+                      router.push(`/ifsc/${item.id}`);
+                      onClose();
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-sky-200 bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-800 transition hover:bg-sky-100"
+                  >
+                    <Building2 className="size-3 text-sky-600" />
+                    <span className="font-mono font-bold">{item.id}</span>
+                  </button>
+                ))}
+                {recentPincode.map(item => (
+                  <button
+                    key={`rec-pin-${item.id}`}
+                    onClick={() => {
+                      router.push(`/pincode/${item.id}`);
+                      onClose();
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 transition hover:bg-amber-100"
+                  >
+                    <MapPin className="size-3 text-amber-600" />
+                    <span className="font-mono font-bold">{item.id}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-sm text-slate-500">
               No results found for &quot;{query}&quot;. Try searching for IFSC, Pincode, Guides, or Tools.
