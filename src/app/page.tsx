@@ -12,6 +12,7 @@ import {
   Package,
   FileSpreadsheet,
   Truck,
+  ShieldAlert,
 } from "lucide-react";
 
 export default function Home() {
@@ -107,28 +108,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured PPS Tool Quick-Banner */}
-      <section className="border-y border-amber-200/40 bg-gradient-to-r from-amber-500/10 via-sky-500/10 to-teal-500/10 py-6">
+      {/* Featured Cyber Fraud Recovery Emergency Banner */}
+      <section className="border-y border-red-200/50 bg-gradient-to-r from-red-600/15 via-rose-500/10 to-amber-500/10 py-6">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white shadow-md shadow-amber-500/30">
-              <Banknote className="size-5" />
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-red-600 text-white shadow-md shadow-red-600/30">
+              <ShieldAlert className="size-5 animate-pulse" />
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-black text-slate-900">Cheque PPS Slip &amp; Amount Words Generator</span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[0.65rem] font-bold text-amber-800">
-                  <Sparkles className="size-2.5" /> High Utility
+                <span className="text-sm font-black text-slate-900">Cyber Fraud Emergency Response &amp; 1930 Helpline Desk</span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[0.65rem] font-bold text-red-800">
+                  <Sparkles className="size-2.5" /> Urgent Action
                 </span>
               </div>
-              <p className="text-xs text-slate-500">Instant RBI-compliant Positive Pay draft, Indian numbering words converter &amp; printable record slips.</p>
+              <p className="text-xs text-slate-600">Lost money to a UPI, APK, or banking scam? Freeze funds, trigger 1930 triage &amp; generate RBI dispute letters.</p>
             </div>
           </div>
           <Link
-            href="/tools/pps-cheque"
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-bold text-white shadow-lg transition hover:bg-slate-800"
+            href="/tools/cyber-fraud-recovery"
+            className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg transition hover:bg-red-700"
           >
-            Launch PPS Generator
+            Launch Recovery Tool
             <ArrowRight className="size-3.5" />
           </Link>
         </div>

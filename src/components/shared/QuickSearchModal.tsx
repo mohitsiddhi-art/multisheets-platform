@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Calculator, Building2, MapPin, Calendar, FileText, ArrowRight, X, Clock } from "lucide-react";
+import { Search, Calculator, Building2, MapPin, Calendar, FileText, ArrowRight, X, Clock, ShieldAlert } from "lucide-react";
 import { guides } from "@/data/guides";
 import { getRecentSearches, RecentItem } from "@/utils/recentSearchesCache";
 
@@ -37,6 +37,7 @@ export function QuickSearchModal({ isOpen, onClose }: QuickSearchModalProps) {
     { title: "Bank IFSC Codes Directory", href: "/ifsc", type: "Directory", icon: Building2, description: "Search verified RBI bank routing codes" },
     { title: "Indian Postal Pincodes Directory", href: "/pincode", type: "Directory", icon: MapPin, description: "Search India Post branch and pincode locations" },
     { title: "Bank Holiday Calendar 2026", href: "/bank-holidays", type: "Feature", icon: Calendar, description: "Comprehensive nationwide bank holidays list" },
+    { title: "Cyber Fraud Emergency Response & Recovery Tool", href: "/tools/cyber-fraud-recovery", type: "Tool", icon: ShieldAlert, description: "1930 helpline triage, bank freeze directory, and RBI dispute letter generator" },
     { title: "Pincode Distance & SLA Calculator", href: "/tools/pincode-distance", type: "Tool", icon: MapPin, description: "Calculate delivery SLA and distance tiers between pincodes" },
     ...guides.map(g => ({
       title: g.title,

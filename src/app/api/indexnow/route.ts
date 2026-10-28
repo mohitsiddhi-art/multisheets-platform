@@ -16,7 +16,9 @@ const URL_LIST = [
   `https://${HOST}/guides/rbi-positive-pay-system-guide`,
   `https://${HOST}/guides/india-post-speed-post-charges-guide`,
   `https://${HOST}/guides/verify-bank-ifsc-micr-code-guide`,
-  `https://${HOST}/guides/rbi-cheque-return-reason-codes-guide`
+  `https://${HOST}/guides/rbi-cheque-return-reason-codes-guide`,
+  `https://${HOST}/guides/cyber-fraud-money-recovery-guide`,
+  `https://${HOST}/tools/cyber-fraud-recovery`
 ];
 
 export async function POST(req: NextRequest) {
