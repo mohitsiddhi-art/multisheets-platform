@@ -18,7 +18,10 @@ const URL_LIST = [
   `https://${HOST}/guides/verify-bank-ifsc-micr-code-guide`,
   `https://${HOST}/guides/rbi-cheque-return-reason-codes-guide`,
   `https://${HOST}/guides/cyber-fraud-money-recovery-guide`,
-  `https://${HOST}/tools/cyber-fraud-recovery`
+  `https://${HOST}/tools/cyber-fraud-recovery`,
+  `https://${HOST}/tools/msme-samadhan-calculator`,
+  `https://${HOST}/tools/eway-bill-calculator`,
+  `https://${HOST}/tools/tds-tcs-finder`
 ];
 
 export async function POST(req: NextRequest) {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Calculator, Building2, MapPin, Calendar, FileText, ArrowRight, X, Clock, ShieldAlert } from "lucide-react";
+import { Search, Calculator, Building2, MapPin, Calendar, FileText, ArrowRight, X, Clock, ShieldAlert, Truck } from "lucide-react";
 import { guides } from "@/data/guides";
 import { getRecentSearches, RecentItem } from "@/utils/recentSearchesCache";
 
@@ -39,6 +39,9 @@ export function QuickSearchModal({ isOpen, onClose }: QuickSearchModalProps) {
     { title: "Bank Holiday Calendar 2026", href: "/bank-holidays", type: "Feature", icon: Calendar, description: "Comprehensive nationwide bank holidays list" },
     { title: "Cyber Fraud Emergency Response & Recovery Tool", href: "/tools/cyber-fraud-recovery", type: "Tool", icon: ShieldAlert, description: "1930 helpline triage, bank freeze directory, and RBI dispute letter generator" },
     { title: "Pincode Distance & SLA Calculator", href: "/tools/pincode-distance", type: "Tool", icon: MapPin, description: "Calculate delivery SLA and distance tiers between pincodes" },
+    { title: "MSME Samadhan & 45-Day Interest Calculator", href: "/tools/msme-samadhan-calculator", type: "Tool", icon: Calculator, description: "Calculate compound interest under MSMED Act Sec 16 & Sec 43B(h)" },
+    { title: "E-Way Bill Validity & Distance Estimator", href: "/tools/eway-bill-calculator", type: "Tool", icon: Truck, description: "Estimate CGST Rule 138 validity periods and transport distance" },
+    { title: "TDS & TCS Compliance Rate & Due Date Lookup", href: "/tools/tds-tcs-finder", type: "Tool", icon: Calculator, description: "Lookup 35+ TDS & TCS sections, rates, and quarterly return due dates" },
     ...guides.map(g => ({
       title: g.title,
       href: `/guides/${g.slug}`,
