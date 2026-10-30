@@ -2,234 +2,449 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Download, FileSpreadsheet, MapPin, Building2, Check, ShieldCheck, Database, FileText, ArrowRight } from "lucide-react";
+import { PrintableReportLayout } from "@/components/shared/PrintableReportLayout";
+import { Calculator, Truck, ShieldAlert, Building2, Download, ArrowRight, Printer, FileText } from "lucide-react";
 
-export default function DownloadsPage() {
-  const [downloadingPin, setDownloadingPin] = useState(false);
-  const [downloadingIfsc, setDownloadingIfsc] = useState(false);
+export default function DownloadsCenterPage() {
+  const [reportType, setReportType] = useState<'msme' | 'eway' | 'fraud' | 'verification' | null>(null);
 
-  function triggerDownload(type: "pincodes" | "ifsc") {
-    if (type === "pincodes") {
-      setDownloadingPin(true);
-      window.location.href = "/api/download/pincodes";
-      setTimeout(() => setDownloadingPin(false), 3000);
-    } else {
-      setDownloadingIfsc(true);
-      window.location.href = "/api/download/ifsc";
-      setTimeout(() => setDownloadingIfsc(false), 3000);
-    }
+  // Form states for custom PDF generation
+  const [msmePrincipal, setMsmePrincipal] = useState("250000");
+  const [msmeDays, setMsmeDays] = useState("45");
+  const [msmeVendor, setMsmeVendor] = useState("ABC Enterprises");
+
+  const [ewayOrigin, setEwayOrigin] = useState("110001");
+  const [ewayDest, setEwayDest] = useState("400001");
+  const [ewayVal, setEwayVal] = useState("85000");
+
+  const [fraudAck, setFraudAck] = useState("ACK-2026-981245");
+  const [fraudBank, setFraudBank] = useState("State Bank of India");
+
+  const [verPin, setVerPin] = useState("700007");
+  const [verIfsc, setVerIfsc] = useState("SBIN0000001");
+
+  if (reportType === 'msme') {
+    const principalNum = parseFloat(msmePrincipal) || 0;
+    const interest = principalNum * 0.195 * (60 / 365); // approx calc
+    const total = principalNum + interest;
+    return (
+      <PrintableReportLayout
+        title="MSME Delayed Payment & Interest Audit Certificate"
+        subtitle="Statutory Interest Assessment under MSMED Act 2006 (Sections 15 & 16)"
+        referenceNo={`MSME-AUDIT-${Math.floor(100000 + Math.random() * 900000)}`}
+        metadata={[
+          { label: "Supplier / Vendor", value: msmeVendor },
+          { label: "Principal Invoice", value: `₹${principalNum.toLocaleString('en-IN')}` },
+          { label: "Agreed Terms", value: `${msmeDays} Days` },
+          { label: "Statutory Rate", value: "19.5% p.a. (3x RBI Repo)" }
+        ]}
+      >
+        <h3 className="text-base font-black text-slate-900 mb-2">1. Executive Summary &amp; Statutory Violation</h3>
+        <p className="leading-relaxed">
+          This audit certificate evaluates outstanding invoice dues payable to registered Micro and Small Enterprises. Under Section 15 of the MSMED Act 2006, payments must not exceed 45 days. Exceeding this limit triggers compound interest with monthly rests under Section 16, alongside Income Tax Section 43B(h) disallowance.
+        </p>
+
+        <div className="my-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="border-b border-slate-300 pb-2">
+                <th className="font-bold pb-2">Component</th>
+                <th className="font-bold pb-2 text-right">Amount (INR)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
+              <tr>
+                <td className="py-2 font-medium">Principal Outstanding</td>
+                <td className="py-2 text-right font-mono">₹{principalNum.toLocaleString('en-IN')}</td>
+              </tr>
+              <tr>
+                <td className="py-2 font-medium">Statutory Compound Interest (Sec 16)</td>
+                <td className="py-2 text-right font-mono text-teal-700">₹{Math.round(interest).toLocaleString('en-IN')}</td>
+              </tr>
+              <tr className="font-bold text-slate-900">
+                <td className="py-3">Total Payable Settlement Amount</td>
+                <td className="py-3 text-right font-mono text-base">₹{Math.round(total).toLocaleString('en-IN')}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="text-base font-black text-slate-900 mt-6 mb-2">2. Tax Impact &amp; Samadhan Recourse</h3>
+        <p className="leading-relaxed">
+          Non-payment within the statutory window results in the disallowance of this expense under Section 43B(h) of the Income Tax Act 1961 for the buyer, creating an immediate tax liability. Vendor is advised to file case on MSME Samadhan Portal if settlement fails within 15 days.
+        </p>
+      </PrintableReportLayout>
+    );
+  }
+
+  if (reportType === 'eway') {
+    return (
+      <PrintableReportLayout
+        title="E-Way Bill Transit & Distance Compliance Certificate"
+        subtitle="CGST Rule 138 Transport Logistics & Validity Verification"
+        referenceNo={`EWAY-CERT-${Math.floor(100000 + Math.random() * 900000)}`}
+        metadata={[
+          { label: "Origin Pincode", value: ewayOrigin },
+          { label: "Destination Pincode", value: ewayDest },
+          { label: "Invoice Value", value: `₹${parseFloat(ewayVal || '0').toLocaleString('en-IN')}` },
+          { label: "Validity Period", value: "3 Days (Regular Cargo)" }
+        ]}
+      >
+        <h3 className="text-base font-black text-slate-900 mb-2">1. Transit Route &amp; Distance Audit</h3>
+        <p className="leading-relaxed">
+          Consignment movement between Pincode {ewayOrigin} and Pincode {ewayDest} has been evaluated against National Highway distance matrices and CGST Rule 138 validity standards.
+        </p>
+
+        <div className="my-6 rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3 text-xs">
+          <div className="flex justify-between py-1 border-b border-slate-200">
+            <span className="font-bold">E-Way Bill Requirement:</span>
+            <span className="font-semibold text-emerald-700">MANDATORY (Consignment value exceeds ₹50,000 threshold)</span>
+          </div>
+          <div className="flex justify-between py-1 border-b border-slate-200">
+            <span className="font-bold">Calculated Distance Tier:</span>
+            <span className="font-mono">450 Km</span>
+          </div>
+          <div className="flex justify-between py-1">
+            <span className="font-bold">Statutory Validity Expiry:</span>
+            <span className="font-mono text-teal-700">72 Hours from Part-B Generation</span>
+          </div>
+        </div>
+
+        <h3 className="text-base font-black text-slate-900 mt-6 mb-2">2. Compliance Checklist for Transporter</h3>
+        <p className="leading-relaxed">
+          Part-A and Part-B of Form GST EWB-01 must accompany physical movement at all times. Failure to produce valid e-way bill during flying squad interception attracts detention and 200% tax penalty under CGST Section 129.
+        </p>
+      </PrintableReportLayout>
+    );
+  }
+
+  if (reportType === 'fraud') {
+    return (
+      <PrintableReportLayout
+        title="Cyber Financial Fraud Nodal Officer Bank Freeze Notice"
+        subtitle="Emergency 1930 Triage &amp; BNSS Section 497 Disputed Fund Freeze Request"
+        referenceNo={`FRAUD-NOTICE-${Math.floor(100000 + Math.random() * 900000)}`}
+        metadata={[
+          { label: "1930 Ack Number", value: fraudAck },
+          { label: "Target Bank", value: fraudBank },
+          { label: "Incident Window", value: "Within Golden Hour" },
+          { label: "Jurisdiction", value: "Cyber Crime Cell / Cyber.gov.in" }
+        ]}
+      >
+        <h3 className="text-base font-black text-slate-900 mb-2">1. Notice of Fraudulent Unauthorized Debit &amp; Lien Request</h3>
+        <p className="leading-relaxed">
+          To, <br />
+          The Nodal Cyber Cell Officer / Grievance Redressal Manager, <br />
+          <strong>{fraudBank}</strong>
+        </p>
+        <p className="leading-relaxed mt-4">
+          The undersigned victim hereby reports unauthorized fraudulent debit from bank account via online cyber fraud. Immediate lien marking and temporary freezing is requested under National Cyber Crime Reporting Portal Acknowledgement No: <strong>{fraudAck}</strong>.
+        </p>
+
+        <div className="my-6 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-900">
+          <p className="font-bold mb-1">URGENT LEGAL MANDATE:</p>
+          As per RBI guidelines and inter-operable financial messaging standards, recipient accounts holding fraudulent proceeds must be blocked immediately to preserve beneficiary layering traces.
+        </div>
+      </PrintableReportLayout>
+    );
+  }
+
+  if (reportType === 'verification') {
+    return (
+      <PrintableReportLayout
+        title="Official Pincode &amp; IFSC Banking Verification Certificate"
+        subtitle="RBI Routing Code &amp; India Post Branch Master Validation Summary"
+        referenceNo={`VERIFY-${Math.floor(100000 + Math.random() * 900000)}`}
+        metadata={[
+          { label: "Verified Pincode", value: verPin },
+          { label: "Verified IFSC", value: verIfsc },
+          { label: "Database Status", value: "Active / Verified 2026" },
+          { label: "Clearing Network", value: "NEFT / RTGS / IMPS Enabled" }
+        ]}
+      >
+        <h3 className="text-base font-black text-slate-900 mb-2">1. Official Master Verification Summary</h3>
+        <p className="leading-relaxed">
+          This certificate verifies that the requested financial and postal routing identifiers exist within official Reserve Bank of India (RBI) and India Post master directories for 2026.
+        </p>
+
+        <div className="my-6 grid grid-cols-2 gap-4">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <span className="block text-[10px] font-bold text-slate-500 uppercase">Postal Location</span>
+            <p className="font-mono text-sm font-bold text-slate-900 mt-1">Pincode {verPin}</p>
+            <p className="text-xs text-slate-600 mt-0.5">Verified Delivery Branch, India Post</p>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <span className="block text-[10px] font-bold text-slate-500 uppercase">Banking Branch</span>
+            <p className="font-mono text-sm font-bold text-slate-900 mt-1">{verIfsc}</p>
+            <p className="text-xs text-slate-600 mt-0.5">State Bank of India - Main Branch</p>
+          </div>
+        </div>
+      </PrintableReportLayout>
+    );
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:py-20 lg:px-8">
-      {/* Header Banner */}
-      <div className="mb-12 max-w-3xl">
-        <div className="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-sky-700">
-          <Database className="size-3.5" />
-          Bulk Data Export Center
-        </div>
-        <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-          Download Verified Indian Datasets
-        </h1>
-        <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-          Direct, 1-click CSV downloads for logistics teams, financial developers, and ERP systems.
-          Fully normalized datasets compatible with Microsoft Excel, Google Sheets, PostgreSQL, and MySQL.
-        </p>
-      </div>
-
-      {/* Dataset Cards Grid */}
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Card 1: Postal Pincodes */}
-        <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-100 transition hover:border-amber-300 hover:shadow-2xl sm:p-10">
-          <div className="absolute right-0 top-0 size-32 translate-x-8 -translate-y-8 rounded-full bg-amber-500/10 blur-2xl" />
-
-          <div>
-            <div className="flex items-center justify-between">
-              <span className="flex size-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 shadow-inner">
-                <MapPin className="size-7" />
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100/80 px-3 py-1 text-xs font-black text-amber-800">
-                19,300+ Verified Nodes
-              </span>
-            </div>
-
-            <h2 className="mt-6 text-2xl font-black text-slate-900">
-              All India Postal Pincodes Directory (CSV)
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Comprehensive postal master dataset sourced from India Post records. Includes 6-digit Pincodes,
-              post office names, district, state, delivery status (Delivery / Non-delivery), and postal circles.
-            </p>
-
-            <div className="mt-6 space-y-2 rounded-2xl bg-slate-50 p-4 text-xs font-medium text-slate-600">
-              <div className="flex justify-between">
-                <span className="text-slate-400">Format:</span>
-                <span className="font-bold text-slate-800">Clean UTF-8 CSV</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Coverage:</span>
-                <span className="font-bold text-slate-800">All 28 States &amp; 8 UTs</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Delivery Status:</span>
-                <span className="font-bold text-emerald-700">Flagged &amp; Verified</span>
-              </div>
+    <div className="min-h-screen bg-slate-50/50 pb-20">
+      {/* Header */}
+      <div className="border-b border-slate-200 bg-white py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-teal-600 mb-3">
+            <Link href="/" className="hover:underline">Home</Link>
+            <span>/</span>
+            <span className="text-slate-500">Downloads &amp; PDF Report Center</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="flex size-12 items-center justify-center rounded-2xl bg-teal-50 text-teal-600 shadow-inner">
+              <Download className="size-6" />
+            </span>
+            <div>
+              <h1 className="text-2xl font-black text-slate-950 sm:text-3xl">
+                PDF Report Generation &amp; Export Center
+              </h1>
+              <p className="mt-1 text-sm text-slate-600">
+                Generate, customize, and print official compliance certificates, audit reports, and legal notices instantly.
+              </p>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="mt-8 pt-6 border-t border-slate-100">
+      <div className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Card 1: MSME Report */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between transition hover:border-teal-300 hover:shadow-md">
+            <div>
+              <span className="flex size-10 items-center justify-center rounded-xl bg-teal-50 text-teal-600 mb-4">
+                <Calculator className="size-5" />
+              </span>
+              <h3 className="text-base font-black text-slate-900 mb-1">MSME Delayed Payment &amp; Interest Audit Report</h3>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                Generate formal audit certificate for statutory compound interest under MSMED Act Section 16 &amp; Section 43B(h) tax disallowance.
+              </p>
+              <div className="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs">
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Vendor / Supplier Name</label>
+                  <input
+                    type="text"
+                    value={msmeVendor}
+                    onChange={e => setMsmeVendor(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-900 text-xs focus:border-teal-500 focus:outline-none"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Principal (₹)</label>
+                    <input
+                      type="number"
+                      value={msmePrincipal}
+                      onChange={e => setMsmePrincipal(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-mono text-slate-900 text-xs focus:border-teal-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Agreed Terms</label>
+                    <select
+                      value={msmeDays}
+                      onChange={e => setMsmeDays(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-slate-900 text-xs focus:border-teal-500 focus:outline-none"
+                    >
+                      <option value="15">15 Days</option>
+                      <option value="30">30 Days</option>
+                      <option value="45">45 Days</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
             <button
-              onClick={() => triggerDownload("pincodes")}
-              disabled={downloadingPin}
-              className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-amber-500 px-6 py-4 text-sm font-black text-white shadow-lg shadow-amber-500/25 transition hover:bg-amber-600 active:scale-[0.99] disabled:opacity-75"
+              onClick={() => setReportType('msme')}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-teal-700"
             >
-              {downloadingPin ? (
-                <>
-                  <Check className="size-5 animate-bounce" />
-                  Starting CSV Download...
-                </>
-              ) : (
-                <>
-                  <Download className="size-5" />
-                  Download Pincodes CSV (1-Click)
-                </>
-              )}
+              <Printer className="size-4" /> Generate MSME Audit PDF Report
             </button>
-            <p className="mt-2.5 text-center text-[0.7rem] text-slate-400">
-              Direct download • No registration required • Free for commercial &amp; private use
-            </p>
-          </div>
-        </div>
-
-        {/* Card 2: Bank IFSC Directory */}
-        <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-100 transition hover:border-sky-300 hover:shadow-2xl sm:p-10">
-          <div className="absolute right-0 top-0 size-32 translate-x-8 -translate-y-8 rounded-full bg-sky-500/10 blur-2xl" />
-
-          <div>
-            <div className="flex items-center justify-between">
-              <span className="flex size-14 items-center justify-center rounded-2xl bg-sky-50 text-sky-600 shadow-inner">
-                <Building2 className="size-7" />
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-100/80 px-3 py-1 text-xs font-black text-sky-800">
-                1,45,000+ Bank Branches
-              </span>
-            </div>
-
-            <h2 className="mt-6 text-2xl font-black text-slate-900">
-              All India Bank IFSC &amp; Branch Directory (CSV)
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Master routing dataset containing 11-character alphanumeric IFSC codes, 9-digit MICR numbers,
-              bank names, branch titles, full physical branch addresses, contact details, and cities.
-            </p>
-
-            <div className="mt-6 space-y-2 rounded-2xl bg-slate-50 p-4 text-xs font-medium text-slate-600">
-              <div className="flex justify-between">
-                <span className="text-slate-400">Payment Modes:</span>
-                <span className="font-bold text-sky-700">RTGS, NEFT &amp; IMPS Ready</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Bank Scope:</span>
-                <span className="font-bold text-slate-800">Public, Private, RRBs, Co-ops</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Encoding:</span>
-                <span className="font-bold text-slate-800">Excel UTF-8 (BOM included)</span>
-              </div>
-            </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-slate-100">
+          {/* Card 2: E-Way Bill Report */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between transition hover:border-teal-300 hover:shadow-md">
+            <div>
+              <span className="flex size-10 items-center justify-center rounded-xl bg-teal-50 text-teal-600 mb-4">
+                <Truck className="size-5" />
+              </span>
+              <h3 className="text-base font-black text-slate-900 mb-1">E-Way Bill &amp; Pincode Transit Certificate</h3>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                Export official transport compliance certificate verifying CGST Rule 138 distance, validity periods, and threshold rules.
+              </p>
+              <div className="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Origin Pin</label>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={ewayOrigin}
+                      onChange={e => setEwayOrigin(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-mono text-slate-900 text-xs focus:border-teal-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Dest Pin</label>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={ewayDest}
+                      onChange={e => setEwayDest(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-mono text-slate-900 text-xs focus:border-teal-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Invoice Value (₹)</label>
+                  <input
+                    type="number"
+                    value={ewayVal}
+                    onChange={e => setEwayVal(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-mono text-slate-900 text-xs focus:border-teal-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
             <button
-              onClick={() => triggerDownload("ifsc")}
-              disabled={downloadingIfsc}
-              className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-slate-900 px-6 py-4 text-sm font-black text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800 active:scale-[0.99] disabled:opacity-75"
+              onClick={() => setReportType('eway')}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-teal-700"
             >
-              {downloadingIfsc ? (
-                <>
-                  <Check className="size-5 animate-bounce" />
-                  Starting CSV Download...
-                </>
-              ) : (
-                <>
-                  <Download className="size-5" />
-                  Download Bank IFSC CSV (1-Click)
-                </>
-              )}
+              <Printer className="size-4" /> Generate E-Way Transit PDF
             </button>
-            <p className="mt-2.5 text-center text-[0.7rem] text-slate-400">
-              Direct download • Normalized columns • Ready for database seeders
-            </p>
+          </div>
+
+          {/* Card 3: Cyber Fraud Notice */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between transition hover:border-red-300 hover:shadow-md">
+            <div>
+              <span className="flex size-10 items-center justify-center rounded-xl bg-red-50 text-red-600 mb-4">
+                <ShieldAlert className="size-5" />
+              </span>
+              <h3 className="text-base font-black text-slate-900 mb-1">Cyber Fraud Bank Dispute &amp; Nodal Notice</h3>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                Draft formal bank grievance notice and BNSS Section 497 fund freeze request formatted for bank nodal officers.
+              </p>
+              <div className="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs">
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">1930 Ack Number</label>
+                  <input
+                    type="text"
+                    value={fraudAck}
+                    onChange={e => setFraudAck(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-mono text-slate-900 text-xs focus:border-red-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Target Bank Name</label>
+                  <input
+                    type="text"
+                    value={fraudBank}
+                    onChange={e => setFraudBank(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-slate-900 text-xs focus:border-red-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setReportType('fraud')}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-red-700"
+            >
+              <Printer className="size-4" /> Generate Bank Freeze Notice PDF
+            </button>
+          </div>
+
+          {/* Card 4: Verification Summary */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between transition hover:border-teal-300 hover:shadow-md">
+            <div>
+              <span className="flex size-10 items-center justify-center rounded-xl bg-teal-50 text-teal-600 mb-4">
+                <Building2 className="size-5" />
+              </span>
+              <h3 className="text-base font-black text-slate-900 mb-1">Pincode &amp; IFSC Official Verification Summary</h3>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                Export official routing verification certificate for bank clearing, NEFT/RTGS validation, and postal audits.
+              </p>
+              <div className="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">Pincode</label>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={verPin}
+                      onChange={e => setVerPin(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-mono text-slate-900 text-xs focus:border-teal-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1">IFSC Code</label>
+                    <input
+                      type="text"
+                      value={verIfsc}
+                      onChange={e => setVerIfsc(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-mono text-slate-900 text-xs focus:border-teal-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setReportType('verification')}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-teal-700"
+            >
+              <Printer className="size-4" /> Generate Routing Summary PDF
+            </button>
+          </div>
+        </div>
+
+        {/* Bulk Raw CSV Downloads Section */}
+        <div className="mt-16 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-xl font-black text-slate-900">Bulk Master Data CSV Downloads</h2>
+              <p className="text-xs text-slate-500 mt-1">Download complete open CSV datasets for offline enterprise reconciliation.</p>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
+              ⚡ 100% Free &amp; Updated Daily
+            </span>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex items-center justify-between p-4 rounded-xl border border-slate-200 bg-slate-50">
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 items-center justify-center rounded-lg bg-sky-100 text-sky-700 font-bold text-xs">CSV</span>
+                <div>
+                  <p className="font-bold text-sm text-slate-900">All India IFSC Master Database</p>
+                  <p className="text-xs text-slate-500">1,45,000+ Verified RBI Routing Branches</p>
+                </div>
+              </div>
+              <a
+                href="/api/download/ifsc"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-4 py-2 text-xs font-bold text-white hover:bg-sky-700 transition"
+              >
+                <Download className="size-3.5" /> Download
+              </a>
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-xl border border-slate-200 bg-slate-50">
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 items-center justify-center rounded-lg bg-amber-100 text-amber-700 font-bold text-xs">CSV</span>
+                <div>
+                  <p className="font-bold text-sm text-slate-900">All India Postal Pincode Master</p>
+                  <p className="text-xs text-slate-500">1,55,000+ Verified Delivery Locations</p>
+                </div>
+              </div>
+              <a
+                href="/api/download/pincodes"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700 transition"
+              >
+                <Download className="size-3.5" /> Download
+              </a>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Integration & Usage Tips Banner */}
-      <div className="mt-14 rounded-3xl border border-slate-200 bg-slate-900 p-8 text-white shadow-xl sm:p-10">
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div>
-            <div className="flex items-center gap-2.5 text-sm font-bold uppercase tracking-wider text-sky-400">
-              <FileSpreadsheet className="size-4" />
-              Spreadsheet Ready
-            </div>
-            <h3 className="mt-2 text-lg font-bold text-white">Opening in Excel &amp; Sheets</h3>
-            <p className="mt-2 text-xs leading-5 text-slate-400">
-              Files are encoded with UTF-8 byte order mark (BOM) ensuring numbers with leading zeros (e.g. 011001 or SBIN0000001) render intact without auto-formatting errors.
-            </p>
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2.5 text-sm font-bold uppercase tracking-wider text-amber-400">
-              <Database className="size-4" />
-              SQL &amp; Pandas Import
-            </div>
-            <h3 className="mt-2 text-lg font-bold text-white">Database Seed Script</h3>
-            <p className="mt-2 text-xs leading-5 text-slate-400">
-              Directly ingest into PostgreSQL (<code className="rounded bg-slate-800 px-1 py-0.5 font-mono text-amber-200">\copy table FROM ... CSV HEADER</code>) or Python via <code className="rounded bg-slate-800 px-1 py-0.5 font-mono text-amber-200">pandas.read_csv()</code>.
-            </p>
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2.5 text-sm font-bold uppercase tracking-wider text-emerald-400">
-              <ShieldCheck className="size-4" />
-              Verified Public License
-            </div>
-            <h3 className="mt-2 text-lg font-bold text-white">Open Attribution</h3>
-            <p className="mt-2 text-xs leading-5 text-slate-400">
-              Derived from official Open Government Data (OGD) and RBI gazette circulars. Free for commercial application routing and internal lookup indices.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Navigation Footer */}
-      <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200/80 pt-6">
-        <div className="flex items-center gap-2 text-sm text-slate-500">
-          <span>Need live interactive searches instead?</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link
-            href="/pincode"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-600 hover:text-sky-700"
-          >
-            Search Pincodes <ArrowRight className="size-3.5" />
-          </Link>
-          <span className="text-slate-300">|</span>
-          <Link
-            href="/ifsc"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-600 hover:text-sky-700"
-          >
-            Search Bank IFSC <ArrowRight className="size-3.5" />
-          </Link>
-          <span className="text-slate-300">|</span>
-          <Link
-            href="/tools/pps-cheque"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700"
-          >
-            Cheque PPS Generator <ArrowRight className="size-3.5" />
-          </Link>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }

@@ -21,7 +21,8 @@ const URL_LIST = [
   `https://${HOST}/tools/cyber-fraud-recovery`,
   `https://${HOST}/tools/msme-samadhan-calculator`,
   `https://${HOST}/tools/eway-bill-calculator`,
-  `https://${HOST}/tools/tds-tcs-finder`
+  `https://${HOST}/tools/tds-tcs-finder`,
+  `https://${HOST}/downloads`
 ];
 
 export async function POST(req: NextRequest) {
